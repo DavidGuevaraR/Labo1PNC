@@ -7,10 +7,11 @@ public class Doctor extends Person {
     private LocalDate recruitmentDate;
     private String code;
 
-    public Doctor(String firstName, String lastName, String dui, LocalDate dateOfBirth, String speciality, LocalDate recruitmentDate) {
+    public Doctor(String firstName, String lastName, String dui, LocalDate dateOfBirth, String speciality, LocalDate recruitmentDate, String code) {
         super(firstName, lastName, dui, dateOfBirth);
         this.speciality = speciality;
         this.recruitmentDate = recruitmentDate;
+        this.code = code;
     }
 
     public String getSpeciality() {
