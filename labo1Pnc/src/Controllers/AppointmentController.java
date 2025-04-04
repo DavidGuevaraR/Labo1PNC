@@ -2,6 +2,7 @@ package Controllers;
 
 import Model.Entity.Doctor;
 import Model.Entity.Person;
+import Service.AppointmentService;
 import Service.DoctorService;
 import Service.PersonService;
 import java.time.LocalDateTime;
@@ -10,6 +11,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AppointmentController {
+
+    private AppointmentService appointmentService;
+
+    public AppointmentController(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
+    }
 
     public void createAppointment(/*PersonService personService,*/ DoctorService doctorService) {
 
@@ -61,7 +68,7 @@ public class AppointmentController {
         Boolean assistence = false;
 
         //Agregar el service de apointmet para guardar en una lista
-
+        appointmentService.addAppointment(selectedDoctor, patient, speciality, date, assistence);
 
     }
 

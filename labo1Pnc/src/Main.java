@@ -1,5 +1,8 @@
+import Controllers.AppointmentController;
 import Controllers.DoctorController;
+import Service.AppointmentService;
 import Service.DoctorService;
+import Service.PersonService;
 
 import java.util.Scanner;
 
@@ -14,7 +17,10 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         Boolean flag = true;
         DoctorService doctorService = new DoctorService();
+        PersonService personService = new PersonService();
+        AppointmentService appointmentService = new AppointmentService();
         DoctorController doctorController = new DoctorController(doctorService);
+        AppointmentController appointmentController = new AppointmentController(appointmentService);
 
         while (flag) {
 
@@ -35,6 +41,7 @@ public class Main {
                     break;
                 case 2:
                     //Función de crear nueva cita
+                    appointmentController.createAppointment(/*personService*/doctorService);
                     break;
                 case 3:
                     //Service de add person
