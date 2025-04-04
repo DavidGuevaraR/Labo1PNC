@@ -28,7 +28,7 @@ public class DoctorController {
         System.out.println("Doctor Last Name: ");
         String lastName = sc.nextLine();
 
-        System.out.println("Doctor Birth Date: ");
+        System.out.println("Doctor Birth Date: (dd/MM/yyyy)");
         String birthDate = sc.nextLine();
         try {
             bDate = LocalDate.parse(birthDate, dtf);
@@ -42,7 +42,7 @@ public class DoctorController {
         System.out.println("Doctor Speciality: ");
         String speciality = sc.nextLine();
 
-        System.out.println("Doctor Recruitment Date: ");
+        System.out.println("Doctor Recruitment Date: (dd/MM/yyyy)");
         String recruitmentDate = sc.nextLine();
         try {
             rDate = LocalDate.parse(recruitmentDate, dtf);
