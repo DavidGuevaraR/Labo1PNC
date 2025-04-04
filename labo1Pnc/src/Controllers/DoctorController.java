@@ -9,13 +9,18 @@ import java.util.Scanner;
 
 public class DoctorController {
 
-    public void DoctorController() {
+    private DoctorService doctorService;
+
+    public DoctorController(DoctorService doctorService) {
+        this.doctorService = doctorService;
+    }
+
+    public void addingDoctor() {
 
         Scanner sc = new Scanner(System.in);
         LocalDate bDate = null;
         LocalDate rDate = null;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DoctorService service = new DoctorService();
 
         System.out.println("Doctor First Name: ");
         String firstName = sc.nextLine();
@@ -47,7 +52,7 @@ public class DoctorController {
 
         String code = CodeGenerator();
 
-        service.AddDoctor(firstName, lastName, dui, bDate, speciality, rDate, code);
+        doctorService.addDoctor(firstName, lastName, dui, bDate, speciality, rDate, code);
 
     }
 
@@ -59,7 +64,7 @@ public class DoctorController {
 
         String AX = letters.charAt(rand.nextInt(letters.length()))+""+ rand.nextInt(10);
 
-        return "ZNA-" + XAX + "MD" + AX;
+        return "ZNA-" + XAX + "-MD-" + AX;
     }
 
 }
