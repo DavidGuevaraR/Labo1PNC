@@ -11,6 +11,44 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AppointmentController {
+    public void appointmentMenu(DoctorService doctorService) {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+
+        do {
+            System.out.println("\n===== Submenú de Citas =====");
+            System.out.println("1.1 Mostrar todas las citas");
+            System.out.println("1.2 Filtrar por doctor");
+            System.out.println("1.3 Filtrar por fecha");
+            System.out.println("1.4 Actualizar cita");
+            System.out.println("0. Regresar al menú principal");
+            System.out.print("Seleccione una opción: ");
+
+            option = scanner.nextInt();
+            scanner.nextLine(); // limpiar buffer
+
+            switch (option) {
+                case 1:
+                    mostrarTodasLasCitas();
+                    break;
+                case 2:
+                    filtrarPorDoctor(doctorService);
+                    break;
+                case 3:
+                    filtrarPorFecha();
+                    break;
+                case 4:
+                    actualizarCita();
+                    break;
+                case 0:
+                    System.out.println("Regresando al menú principal...");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+
+        } while (option != 0);
+    }
 
     private AppointmentService appointmentService;
 
@@ -18,7 +56,7 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
-    public void createAppointment(/*PersonService personService,*/ DoctorService doctorService) {
+    public void createAppointment(PersonService personService, DoctorService doctorService) {
 
         Scanner sc = new Scanner(System.in);
         Person patient = null;
@@ -28,7 +66,11 @@ public class AppointmentController {
 
         System.out.println("Patient DUI: ");
         String dui = sc.nextLine();
-        //patient = searchPerson(personService.listPerson(), dui);
+        patient = personService.findPersonByDui(dui);
+        if (patient == null) {
+            System.out.println("Paciente no encontrado. Por favor, registre al paciente primero.");
+            return;
+        }
 
         System.out.println("Choose Doctor Speciality:");
         String speciality = sc.nextLine();
@@ -98,6 +140,100 @@ public class AppointmentController {
             }
         }
         return null;
+    }
+    private void mostrarTodasLasCitas() {
+        List<Model.Entity.Appointment> appointments = appointmentService.getAllAppointments();
+        if (appointments.isEmpty()) {
+            System.out.println("No hay citas registradas.");
+        } else {
+            for (Model.Entity.Appointment a : appointments) {
+                System.out.println(a);
+            }
+        }
+    }
+
+    private void filtrarPorDoctor(DoctorService doctorService) {
+        Scanner sc = new Scanner(System.in);
+        List<Doctor> doctors = doctorService.getDoctors();
+
+        if (doctors.isEmpty()) {
+            System.out.println("No hay doctores registrados.");
+            return;
+        }
+
+        System.out.println("Doctores disponibles:");
+        for (Doctor d : doctors) {
+            System.out.println("Código: " + d.getCode() + " | " + d.getFirstName() + " " + d.getLastName() + " - " + d.getSpeciality());
+        }
+
+        System.out.print("Ingrese el código del doctor: ");
+        String code = sc.nextLine();
+
+        List<Model.Entity.Appointment> result = appointmentService.getAppointmentsByDoctorCode(code);
+        if (result.isEmpty()) {
+            System.out.println("No hay citas para este doctor.");
+        } else {
+            result.forEach(System.out::println);
+        }
+    }
+
+    private void filtrarPorFecha() {
+        Scanner sc = new Scanner(System.in);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        System.out.print("Ingrese la fecha (dd/MM/yyyy): ");
+        String dateInput = sc.nextLine();
+
+        try {
+            LocalDateTime start = LocalDateTime.parse(dateInput + " 00:00", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            LocalDateTime end = start.plusDays(1);
+
+            List<Model.Entity.Appointment> result = appointmentService.getAppointmentsByDateRange(start, end);
+
+            if (result.isEmpty()) {
+                System.out.println("No hay citas en esa fecha.");
+            } else {
+                result.forEach(System.out::println);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Formato de fecha inválido.");
+        }
+    }
+
+    private void actualizarCita() {
+        Scanner sc = new Scanner(System.in);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        System.out.print("Ingrese el ID de la cita a actualizar: ");
+        int id = sc.nextInt();
+        sc.nextLine(); // limpiar buffer
+
+        Model.Entity.Appointment appointment = appointmentService.getAppointmentById(id);
+        if (appointment == null) {
+            System.out.println("No se encontró la cita.");
+            return;
+        }
+
+        System.out.println("Cita actual: " + appointment);
+
+        System.out.print("Nueva fecha y hora (dd/MM/yyyy HH:mm): ");
+        String newDateStr = sc.nextLine();
+
+        System.out.print("¿El paciente asistió? (true/false): ");
+        boolean asistio = sc.nextBoolean();
+        sc.nextLine();
+
+        try {
+            LocalDateTime newDate = LocalDateTime.parse(newDateStr, formatter);
+            appointment.setDate(newDate);
+            appointment.setAttendance(asistio);
+            appointmentService.updateAppointment(appointment);
+
+            System.out.println("Cita actualizada con éxito.");
+        } catch (Exception e) {
+            System.out.println("Error al actualizar la cita.");
+        }
     }
 
 }

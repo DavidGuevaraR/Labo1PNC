@@ -40,4 +40,49 @@ public class AppointmentService {
         return appointments;
     }
 
+    public List<Appointment> getAllAppointments() {
+        return new ArrayList<>(appointments); // devolvemos una copia por seguridad
+    }
+
+    public List<Appointment> getAppointmentsByDoctorCode(String code) {
+        List<Appointment> result = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            if (appointment.getDoctor().getCode().equalsIgnoreCase(code.trim())) {
+                result.add(appointment);
+            }
+        }
+        return result;
+    }
+
+    public List<Appointment> getAppointmentsByDateRange(LocalDateTime start, LocalDateTime end) {
+        List<Appointment> result = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            if (!appointment.getDate().isBefore(start) && appointment.getDate().isBefore(end)) {
+                result.add(appointment);
+            }
+        }
+        return result;
+    }
+
+    public Appointment getAppointmentById(int id) {
+        for (Appointment appointment : appointments) {
+            if (appointment.getId() == id) {
+                return appointment;
+            }
+        }
+        return null;
+    }
+
+    public void updateAppointment(Appointment updatedAppointment) {
+        for (int i = 0; i < appointments.size(); i++) {
+            if (appointments.get(i).getId() == updatedAppointment.getId()) {
+                appointments.set(i, updatedAppointment);
+                System.out.println("La cita fue actualizada correctamente.");
+                return;
+            }
+        }
+        System.out.println("No se encontró la cita para actualizar.");
+    }
+
+
 }

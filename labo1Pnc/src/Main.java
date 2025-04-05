@@ -1,5 +1,6 @@
 import Controllers.AppointmentController;
 import Controllers.DoctorController;
+import Controllers.PersonController;
 import Service.AppointmentService;
 import Service.DoctorService;
 import Service.PersonService;
@@ -20,6 +21,7 @@ public class Main {
         PersonService personService = new PersonService();
         AppointmentService appointmentService = new AppointmentService();
         DoctorController doctorController = new DoctorController(doctorService);
+        PersonController personController = new PersonController(personService);
         AppointmentController appointmentController = new AppointmentController(appointmentService);
 
         while (flag) {
@@ -38,13 +40,15 @@ public class Main {
             switch (opt) {
                 case 1:
                     //Funcion de listar citas  c3on sus opciones
+                    appointmentController.appointmentMenu(doctorService);
+
                     break;
                 case 2:
                     //Función de crear nueva cita
-                    appointmentController.createAppointment(/*personService*/doctorService);
+                    appointmentController.createAppointment(personService, doctorService);
                     break;
                 case 3:
-                    //Service de add person
+                    personController.addingPerson();
                     break;
                 case 4:
                     //Service de add doctor
