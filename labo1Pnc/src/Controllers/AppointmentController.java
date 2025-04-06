@@ -50,6 +50,40 @@ public class AppointmentController {
         } while (option != 0);
     }
 
+    public void newAppointmentMenu(PersonService personService, DoctorService doctorService){
+        Scanner scanner = new Scanner(System.in);
+        int opt = 0;
+
+        do {
+            System.out.println("==== Nueva cita ====");
+            System.out.println("1. Crear cita para hoy");
+            System.out.println("2. Crear cita Programada");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
+
+            opt = scanner.nextInt();
+            scanner.nextLine();
+
+            switch(opt){
+                case 1:
+                    //Crear cita para hoy
+                    System.out.println("Creando cita para hoy...");
+                    break;
+                case 2:
+                    createAppointment(personService, doctorService);
+                    break;
+                case 0:
+                    System.out.println("Regresando Menu Principal...");
+                    break;
+                default:
+                    System.out.println("Opcion no valida");
+                    break;
+            }
+
+        }while(opt != 0);
+
+    }
+
     private AppointmentService appointmentService;
 
     public AppointmentController(AppointmentService appointmentService) {
@@ -110,7 +144,7 @@ public class AppointmentController {
         Boolean assistence = false;
 
         //Agregar el service de apointmet para guardar en una lista
-        appointmentService.addAppointment(selectedDoctor, patient, speciality, date, assistence);
+        appointmentService.addScheduleAppointment(selectedDoctor, patient, speciality, date, assistence);
 
     }
 

@@ -16,14 +16,32 @@ public class AppointmentService {
         this.appointments = new ArrayList<>();
     }
 
-    public void addAppointment(Doctor doctor, Person person, String speciality, LocalDateTime date, boolean attendance){
+    public Boolean addScheduleAppointment(Doctor doctor, Person person, String speciality, LocalDateTime date, boolean attendance){
+
+        if(date.isBefore(LocalDateTime.now())){
+            System.out.println("La fecha de la cita no puede ser anterior a la fecha actual.");
+            return false;
+        }
+
+        int hour = date.getHour();
+        if(hour < 8 || hour > 16){
+            System.out.println("La cita debe estar entre las 8:00 y las 16:00.");
+            return false;
+        }
+
+        for(Appointment appointment : appointments){
+            if(appointment.getDoctor().getCode().equalsIgnoreCase(doctor.getCode()) && appointment.getDate().equals(date)){
+                System.out.println("Ya existe una cita en esa fecha para este doctor.");
+                return false;
+            }
+        }
 
         Appointment newAppointment = new Appointment(doctor, person, speciality, date, attendance);
-
         appointments.add(newAppointment);
 
         System.out.println("Appointment added");
 
+        return true;
     }
 
     public void ListAppointments(){

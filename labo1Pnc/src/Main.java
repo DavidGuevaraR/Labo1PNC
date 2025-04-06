@@ -45,7 +45,7 @@ public class Main {
                     break;
                 case 2:
                     //Función de crear nueva cita
-                    appointmentController.createAppointment(personService, doctorService);
+                    appointmentController.newAppointmentMenu(personService, doctorService);
                     break;
                 case 3:
                     personController.addingPerson();
