@@ -77,7 +77,9 @@ public class AppointmentService {
         for (int i = 0; i < appointments.size(); i++) {
             if (appointments.get(i).getId() == updatedAppointment.getId()) {
                 appointments.set(i, updatedAppointment);
-                System.out.println("La cita fue actualizada correctamente.");
+                if (!appointments.get(i).isAttendance())
+                    appointments.remove(i);
+                    System.out.println("La cita fue eliminada correctamente.");
                 return;
             }
         }

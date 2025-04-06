@@ -20,7 +20,7 @@ public class AppointmentController {
             System.out.println("1 Mostrar todas las citas");
             System.out.println("2 Filtrar por doctor");
             System.out.println("3 Filtrar por fecha");
-            System.out.println("4 Actualizar cita");
+            System.out.println("4 Confirmar cita");
             System.out.println("0. Regresar al menú principal");
             System.out.print("Seleccione una opción: ");
 
@@ -217,16 +217,11 @@ public class AppointmentController {
 
         System.out.println("Cita actual: " + appointment);
 
-        System.out.print("Nueva fecha y hora (dd/MM/yyyy HH:mm): ");
-        String newDateStr = sc.nextLine();
-
         System.out.print("¿El paciente asistió? (true/false): ");
         boolean asistio = sc.nextBoolean();
         sc.nextLine();
 
         try {
-            LocalDateTime newDate = LocalDateTime.parse(newDateStr, formatter);
-            appointment.setDate(newDate);
             appointment.setAttendance(asistio);
             appointmentService.updateAppointment(appointment);
 
