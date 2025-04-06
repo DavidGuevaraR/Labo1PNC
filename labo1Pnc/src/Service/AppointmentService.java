@@ -3,10 +3,7 @@ package Service;
 import Model.Entity.Appointment;
 import Model.Entity.Doctor;
 import Model.Entity.Person;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +15,7 @@ public class AppointmentService {
         this.appointments = new ArrayList<>();
     }
 
-    public Boolean addScheduleAppointment(Doctor doctor, Person person, String speciality, LocalDateTime date, boolean attendance){
+    public boolean addScheduleAppointment(Doctor doctor, Person person, String speciality, LocalDateTime date, boolean attendance){
 
         if(date.isBefore(LocalDateTime.now())){
             System.out.println("La fecha de la cita no puede ser anterior a la fecha actual.");
@@ -46,40 +43,38 @@ public class AppointmentService {
         return true;
     }
 
-    public Boolean addDayAppointment(Doctor doctor, Person person, String speciality, LocalDateTime date, boolean attendance){
+    public boolean addDayAppointment(Doctor doctor, Person person, String speciality, LocalDateTime date, boolean attendance){
         Appointment newAppointment = new Appointment(doctor, person, speciality, date, attendance);
         appointments.add(newAppointment);
+        System.out.println("Cita agregada correctamente a las: " + newAppointment.getDate().getHour());
         return true;
     }
 
-    public List<LocalDateTime> getAvailableHours(Doctor doctor, LocalDateTime day){
-        List<LocalDateTime> availableHours = new ArrayList<>();
+    public LocalDateTime getAvailableHours(Doctor doctor, LocalDateTime day) {
+        LocalDateTime availableHours = null;
 
-        LocalDate date = day.toLocalDate();
-        LocalTime time = LocalTime.now();
+        for (int hour = 8; hour < 16; hour++) {
+            availableHours = LocalDateTime.of(day.getYear(), day.getMonth(), day.getDayOfMonth(), hour, 0);
 
-        for (int i = 8; i < 16; i++) {
-            LocalTime estimattedHour = LocalTime.of(i, 0);
-
-            if (date.equals(LocalDate.now()) && estimattedHour.isBefore(time)) {
-                continue;
-            }
-
-            LocalDateTime estimatedDateTime = LocalDateTime.of(date, estimattedHour);
-
-            boolean isTaken = false;
-            for (Appointment appointment : appointments) {
-                if (appointment.getDoctor().getCode().equalsIgnoreCase(doctor.getCode()) && appointment.getDate().equals(estimatedDateTime)) {
-                    isTaken = true;
-                    break;
-                }
-            }
-            if (!isTaken) {
-                availableHours.add(estimatedDateTime);
+            if (isTimeSlotAvailable(doctor, availableHours)) {
+                return availableHours;
             }
         }
-        return availableHours;
+
+        System.out.println("No horas disponibles para el doctor.");
+        return null;
     }
+
+    private boolean isTimeSlotAvailable(Doctor doctor, LocalDateTime timeSlot) {
+        for (Appointment appointment : appointments) {
+            if (appointment.getDoctor().getCode().equalsIgnoreCase(doctor.getCode()) &&
+                    appointment.getDate().equals(timeSlot)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public void ListAppointments(){
         if(!appointments.isEmpty()){
@@ -132,10 +127,11 @@ public class AppointmentService {
         for (int i = 0; i < appointments.size(); i++) {
             if (appointments.get(i).getId() == updatedAppointment.getId()) {
                 appointments.set(i, updatedAppointment);
-                if (!appointments.get(i).isAttendance())
+                if (!appointments.get(i).isAttendance()) {
                     appointments.remove(i);
                     System.out.println("La cita fue eliminada correctamente.");
-                return;
+                    return;
+                }
             }
         }
         System.out.println("No se encontró la cita para actualizar.");

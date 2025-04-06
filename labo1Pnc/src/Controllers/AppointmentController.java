@@ -144,10 +144,14 @@ public class AppointmentController {
             System.out.println("Invalid Appointment date");
         }
 
-        Boolean assistence = false;
+        boolean assistence = false;
 
         //Agregar el service de apointmet para guardar en una lista
-        appointmentService.addScheduleAppointment(selectedDoctor, patient, speciality, date, assistence);
+        if(appointmentService.addScheduleAppointment(selectedDoctor, patient, speciality, date, assistence)){
+            System.out.println("Cita agregada correctamente");
+        }else{
+            System.out.println("Error al agregar la cita");
+        }
 
     }
 
@@ -156,7 +160,6 @@ public class AppointmentController {
         Person patient = null;
         List<Doctor> doctorsSpeciality = null;
         LocalDateTime today = LocalDateTime.now();
-        LocalDateTime day = LocalDateTime.of(today.toLocalDate(), java.time.LocalTime.of(0, 0));
 
         System.out.println("Patient DUI: ");
         String dui = sc.nextLine();
@@ -193,18 +196,15 @@ public class AppointmentController {
 
         }
 
-        List<LocalDateTime> availableHours = appointmentService.getAvailableHours(selectedDoctor, day);
+        LocalDateTime availableHours = appointmentService.getAvailableHours(selectedDoctor, today);
 
-        if (availableHours.isEmpty()) {
-            System.out.println("No disponible horas Con el doctor para hoy.");
-            return;
+        boolean assistence = false;
+
+        if (appointmentService.addDayAppointment(selectedDoctor, patient, speciality, availableHours, assistence)){
+            System.out.println("Cita agregada correctamente");
+        }else {
+            System.out.println("Error al agregar la cita");
         }
-
-        LocalDateTime selectedTime = availableHours.get(0);
-
-        Boolean assistence = false;
-
-        appointmentService.addDayAppointment(selectedDoctor, patient, speciality, selectedTime, assistence);
     }
 
     public static List<Doctor> searchDoctorSpeciality(List<Doctor> doctors, String speciality) {

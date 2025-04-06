@@ -16,7 +16,7 @@ public class Main {
     public void menu(){
 
         Scanner sc = new Scanner(System.in);
-        Boolean flag = true;
+        boolean flag = true;
         DoctorService doctorService = new DoctorService();
         PersonService personService = new PersonService();
         AppointmentService appointmentService = new AppointmentService();
@@ -31,15 +31,15 @@ public class Main {
             System.out.println("2. Nueva Cita");
             System.out.println("3. Agregar Paciente");
             System.out.println("4. Agregar Doctor");
-            System.out.println("5. Salir");
-            System.out.println("6. Lista doctores");
+            System.out.println("5. Mundo Salva Vidas");
+            System.out.println("6. Salir");
 
             int opt = sc.nextInt();
             sc.nextLine();
 
             switch (opt) {
                 case 1:
-                    //Funcion de listar citas  c3on sus opciones
+                    //Funcion de listar citas  con sus opciones
                     appointmentController.appointmentMenu(doctorService);
 
                     break;
@@ -55,12 +55,11 @@ public class Main {
                     doctorController.addingDoctor();
                     break;
                 case 5:
+                    System.out.println("¡No sirve de nada, pero se ve bonito!");
+                    break;
+                case 6:
                     System.out.println("Gracias por usar nuestro sistema");
                     flag = false;
-                    break;
-                //Esto solo es pa ver si se agregan los doctores, borrar al final
-                case 6:
-                    doctorService.ListDoctors();
                     break;
                 default:
                     System.out.println("Opcion no valida");
