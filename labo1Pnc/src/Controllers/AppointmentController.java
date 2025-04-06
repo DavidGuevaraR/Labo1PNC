@@ -17,10 +17,10 @@ public class AppointmentController {
 
         do {
             System.out.println("\n===== Submenú de Citas =====");
-            System.out.println("1.1 Mostrar todas las citas");
-            System.out.println("1.2 Filtrar por doctor");
-            System.out.println("1.3 Filtrar por fecha");
-            System.out.println("1.4 Actualizar cita");
+            System.out.println("1 Mostrar todas las citas");
+            System.out.println("2 Filtrar por doctor");
+            System.out.println("3 Filtrar por fecha");
+            System.out.println("4 Actualizar cita");
             System.out.println("0. Regresar al menú principal");
             System.out.print("Seleccione una opción: ");
 
