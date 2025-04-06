@@ -52,7 +52,8 @@ public class AppointmentController {
 
     public void newAppointmentMenu(PersonService personService, DoctorService doctorService){
         Scanner scanner = new Scanner(System.in);
-        int opt = 0;
+        boolean flag = true;
+        int opt;
 
         do {
             System.out.println("==== Nueva cita ====");
@@ -66,21 +67,23 @@ public class AppointmentController {
 
             switch(opt){
                 case 1:
-                    //Crear cita para hoy
-                    System.out.println("Creando cita para hoy...");
+                    createDayAppointment(personService, doctorService);
+                    flag = false;
                     break;
                 case 2:
-                    createAppointment(personService, doctorService);
+                    createScheduleAppointment(personService, doctorService);
+                    flag = false;
                     break;
                 case 0:
                     System.out.println("Regresando Menu Principal...");
+                    flag = false;
                     break;
                 default:
                     System.out.println("Opcion no valida");
                     break;
             }
 
-        }while(opt != 0);
+        }while(flag);
 
     }
 
@@ -90,7 +93,7 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
-    public void createAppointment(PersonService personService, DoctorService doctorService) {
+    public void createScheduleAppointment(PersonService personService, DoctorService doctorService) {
 
         Scanner sc = new Scanner(System.in);
         Person patient = null;
@@ -146,6 +149,62 @@ public class AppointmentController {
         //Agregar el service de apointmet para guardar en una lista
         appointmentService.addScheduleAppointment(selectedDoctor, patient, speciality, date, assistence);
 
+    }
+
+    public void createDayAppointment(PersonService personService, DoctorService doctorService) {
+        Scanner sc = new Scanner(System.in);
+        Person patient = null;
+        List<Doctor> doctorsSpeciality = null;
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime day = LocalDateTime.of(today.toLocalDate(), java.time.LocalTime.of(0, 0));
+
+        System.out.println("Patient DUI: ");
+        String dui = sc.nextLine();
+        patient = personService.findPersonByDui(dui);
+        if (patient == null) {
+            System.out.println("Paciente no encontrado. Por favor, registre al paciente primero.");
+            return;
+        }
+
+        System.out.println("Choose Doctor Speciality:");
+        String speciality = sc.nextLine();
+        doctorsSpeciality = searchDoctorSpeciality(doctorService.getDoctors(), speciality);
+
+        if(doctorsSpeciality.isEmpty()){
+            System.out.println("No doctors found with this speciality");
+            return;
+        }
+
+        System.out.println("Available Doctors: ");
+        for (Doctor doctor : doctorsSpeciality) {
+            System.out.println("Code: " + doctor.getCode() + ", Doctor: " + doctor.getFirstName().charAt(0) + ". " + doctor.getLastName());
+        }
+
+        Doctor selectedDoctor = null;
+        while(selectedDoctor == null){
+            System.out.println("Select Doctor Code: ");
+            String doctorCode = sc.nextLine();
+
+            selectedDoctor = searchDoctor(doctorsSpeciality, doctorCode);
+
+            if(selectedDoctor == null){
+                System.out.println("Doctor not found");
+            }
+
+        }
+
+        List<LocalDateTime> availableHours = appointmentService.getAvailableHours(selectedDoctor, day);
+
+        if (availableHours.isEmpty()) {
+            System.out.println("No disponible horas Con el doctor para hoy.");
+            return;
+        }
+
+        LocalDateTime selectedTime = availableHours.get(0);
+
+        Boolean assistence = false;
+
+        appointmentService.addDayAppointment(selectedDoctor, patient, speciality, selectedTime, assistence);
     }
 
     public static List<Doctor> searchDoctorSpeciality(List<Doctor> doctors, String speciality) {

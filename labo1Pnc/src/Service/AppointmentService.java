@@ -4,7 +4,9 @@ import Model.Entity.Appointment;
 import Model.Entity.Doctor;
 import Model.Entity.Person;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,41 @@ public class AppointmentService {
         System.out.println("Appointment added");
 
         return true;
+    }
+
+    public Boolean addDayAppointment(Doctor doctor, Person person, String speciality, LocalDateTime date, boolean attendance){
+        Appointment newAppointment = new Appointment(doctor, person, speciality, date, attendance);
+        appointments.add(newAppointment);
+        return true;
+    }
+
+    public List<LocalDateTime> getAvailableHours(Doctor doctor, LocalDateTime day){
+        List<LocalDateTime> availableHours = new ArrayList<>();
+
+        LocalDate date = day.toLocalDate();
+        LocalTime time = LocalTime.now();
+
+        for (int i = 8; i < 16; i++) {
+            LocalTime estimattedHour = LocalTime.of(i, 0);
+
+            if (date.equals(LocalDate.now()) && estimattedHour.isBefore(time)) {
+                continue;
+            }
+
+            LocalDateTime estimatedDateTime = LocalDateTime.of(date, estimattedHour);
+
+            boolean isTaken = false;
+            for (Appointment appointment : appointments) {
+                if (appointment.getDoctor().getCode().equalsIgnoreCase(doctor.getCode()) && appointment.getDate().equals(estimatedDateTime)) {
+                    isTaken = true;
+                    break;
+                }
+            }
+            if (!isTaken) {
+                availableHours.add(estimatedDateTime);
+            }
+        }
+        return availableHours;
     }
 
     public void ListAppointments(){
