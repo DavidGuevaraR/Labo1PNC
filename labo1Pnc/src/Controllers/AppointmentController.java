@@ -21,6 +21,7 @@ public class AppointmentController {
             System.out.println("2 Filtrar por doctor");
             System.out.println("3 Filtrar por fecha");
             System.out.println("4 Confirmar cita");
+            System.out.println("5. Mostrar día con más citas");
             System.out.println("0. Regresar al menú principal");
             System.out.print("Seleccione una opción: ");
 
@@ -40,6 +41,9 @@ public class AppointmentController {
                 case 4:
                     actualizarCita();
                     break;
+                case 5:
+                    mostrarDiaConMasCitas();
+                    break;
                 case 0:
                     System.out.println("Regresando al menú principal...");
                     break;
@@ -48,6 +52,9 @@ public class AppointmentController {
             }
 
         } while (option != 0);
+    }
+    public void mostrarDiaConMasCitas() {
+        appointmentService.getDayWithMostAppointments();
     }
 
     public void newAppointmentMenu(PersonService personService, DoctorService doctorService){

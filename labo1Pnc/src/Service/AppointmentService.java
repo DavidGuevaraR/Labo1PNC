@@ -3,9 +3,15 @@ package Service;
 import Model.Entity.Appointment;
 import Model.Entity.Doctor;
 import Model.Entity.Person;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class AppointmentService {
 
@@ -135,6 +141,59 @@ public class AppointmentService {
             }
         }
         System.out.println("No se encontró la cita para actualizar.");
+    }
+
+    public void getDayWithMostAppointments() {
+        if (appointments.isEmpty()) {
+            System.out.println("No hay citas registradas.");
+            return;
+        }
+
+        Map<LocalDate, Integer> countByDate = new HashMap<>();
+
+        for (Appointment appointment : appointments) {
+            LocalDate dateOnly = appointment.getDate().toLocalDate();
+            countByDate.put(dateOnly, countByDate.getOrDefault(dateOnly, 0) + 1);
+        }
+
+        LocalDate maxDate = null;
+        int maxCount = 0;
+
+        for (Map.Entry<LocalDate, Integer> entry : countByDate.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                maxDate = entry.getKey();
+            }
+        }
+
+        if (maxDate != null) {
+            System.out.println("📅 El día con más citas es: " + maxDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
+                    " con un total de " + maxCount + " citas.");
+
+            System.out.println("🗓️  Citas en ese día:");
+            listarCitasPorFecha(maxDate);
+        }
+    }
+    private void listarCitasPorFecha(LocalDate date) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        boolean found = false;
+        for (Appointment appointment : appointments) {
+            if (appointment.getDate().toLocalDate().equals(date)) {
+                found = true;
+                System.out.println("Doctor: " + appointment.getDoctor().getFirstName().charAt(0) + ". " +
+                        appointment.getDoctor().getLastName() + ", Paciente: " +
+                        appointment.getPerson().getFirstName().charAt(0) + ". " +
+                        appointment.getPerson().getLastName() + ", Especialidad: " +
+                        appointment.getSpeciality() + ", Fecha y hora: " +
+                        appointment.getDate().format(dtf) + ", Asistencia: " +
+                        (appointment.isAttendance() ? "Sí" : "No"));
+            }
+        }
+
+        if (!found) {
+            System.out.println("No se encontraron citas para ese día.");
+        }
     }
 
 
