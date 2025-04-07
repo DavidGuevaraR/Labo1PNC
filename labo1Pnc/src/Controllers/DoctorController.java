@@ -22,37 +22,91 @@ public class DoctorController {
         LocalDate rDate = null;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        System.out.println("Doctor First Name: ");
-        String firstName = sc.nextLine();
+        String firstName;
+        do {
+            System.out.print("Ingrese el primer nombre del doctor: ");
+            firstName = sc.nextLine();
+            if (firstName.isEmpty()) {
+                System.out.println("El nombre no puede estar vacío.");
+            }
+        } while (firstName.isEmpty());
 
-        System.out.println("Doctor Last Name: ");
-        String lastName = sc.nextLine();
+        String lastName;
+        do {
+            System.out.print("Ingrese el primer apellido del doctor: ");
+            lastName = sc.nextLine();
+            if (lastName.isEmpty()) {
+                System.out.println("El apellido no puede estar vacío.");
+            }
+        } while (lastName.isEmpty());
 
-        System.out.println("Doctor Birth Date: (dd/MM/yyyy)");
-        String birthDate = sc.nextLine();
-        try {
-            bDate = LocalDate.parse(birthDate, dtf);
-        } catch (Exception e) {
-            System.out.println("Invalid birth date");
-        }
+        String birthDate;
+        do {
+            System.out.print("Ingrese la fecha de nacimiento (dd/MM/yyyy): ");
+            birthDate = sc.nextLine();
+            try {
+                bDate = LocalDate.parse(birthDate, dtf);
+            } catch (Exception e) {
+                System.out.println("Fecha de nacimiento inválida.");
+                bDate = null;
+            }
+        } while (bDate == null);
 
-        System.out.println("Doctor DUI: ");
-        String dui = sc.nextLine();
+        String dui;
+        boolean validDui = false;
+        do {
+            System.out.print("Ingrese el DUI del doctor (########-#): ");
+            dui = sc.nextLine();
 
-        System.out.println("Doctor Speciality: ");
-        String speciality = sc.nextLine();
+            final String currentDui = dui;
 
-        System.out.println("Doctor Recruitment Date: (dd/MM/yyyy)");
-        String recruitmentDate = sc.nextLine();
-        try {
-            rDate = LocalDate.parse(recruitmentDate, dtf);
-        } catch (Exception e) {
-            System.out.println("Invalid Recruitment date");
-        }
+            if (!dui.matches("\\d{8}-\\d")) {
+                System.out.println("El DUI debe tener el formato ########-#");
+            } else if (doctorService.getDoctors().stream().anyMatch(d -> d.getDui().equals(currentDui))) {
+                System.out.println("Ya existe un doctor registrado con ese DUI.");
+            } else {
+                validDui = true;
+            }
 
-        String code = CodeGenerator();
+        } while (!validDui);
+
+
+        String speciality;
+        do {
+            System.out.print("Ingrese la especialidad del doctor: ");
+            speciality = sc.nextLine();
+            if (speciality.isEmpty()) {
+                System.out.println("La especialidad no puede estar vacía.");
+            }
+        } while (speciality.isEmpty());
+
+        String recruitmentDate;
+        do {
+            System.out.print("Ingrese la fecha de contratación (dd/MM/yyyy): ");
+            recruitmentDate = sc.nextLine();
+            try {
+                rDate = LocalDate.parse(recruitmentDate, dtf);
+            } catch (Exception e) {
+                System.out.println(" Fecha de contratación inválida.");
+                rDate = null;
+            }
+        } while (rDate == null);
+
+        String code;
+        boolean isUnique;
+
+        do {
+            code = CodeGenerator();
+            final String generatedCode = code;
+
+            isUnique = doctorService.getDoctors().stream()
+                    .noneMatch(d -> d.getCode().equals(generatedCode));
+
+        } while (!isUnique);
+
 
         doctorService.addDoctor(firstName, lastName, dui, bDate, speciality, rDate, code);
+        System.out.println("Doctor agregado exitosamente con código único: " + code);
 
     }
 
