@@ -42,17 +42,31 @@ public class PersonController {
         } while (!isValidName(lastName));
 
         // El formato del DUI lo dej asi: 12345678-9)
-        String dui;
+        //  Pregunta si es menor de edad
+        String esMenor;
         do {
-            System.out.print("Ingrese su DUI (formato: 12345678-9): ");
-            dui = sc.nextLine().trim();
-            if (!isValidDui(dui)) {
-                System.out.println("DUI inválido. Use el formato 12345678-9.");
-            } else if (personService.findPersonByDui(dui) != null) {
-                System.out.println("Este DUI ya está registrado. Ingrese uno diferente.");
+            System.out.print("¿Es menor de edad? (si/no): ");
+            esMenor = sc.nextLine().trim().toLowerCase();
+            if (!esMenor.equals("si") && !esMenor.equals("no")) {
+                System.out.println("Respuesta inválida. Escriba 'si' o 'no' en minúscula.");
             }
-        } while (!isValidDui(dui) || personService.findPersonByDui(dui) != null);
+        } while (!esMenor.equals("si") && !esMenor.equals("no"));
 
+        String dui;
+
+        if (esMenor.equals("si")) {
+            dui = "00000000-0";
+        } else {
+            do {
+                System.out.print("Ingrese su DUI (formato: 12345678-9): ");
+                dui = sc.nextLine().trim();
+                if (!isValidDui(dui)) {
+                    System.out.println("DUI inválido. Use el formato 12345678-9.");
+                } else if (personService.findPersonByDui(dui) != null) {
+                    System.out.println("Este DUI ya está registrado. Ingrese uno diferente.");
+                }
+            } while (!isValidDui(dui) || personService.findPersonByDui(dui) != null);
+        }
         LocalDate dateOfBirth = null;
         while (dateOfBirth == null) {
             System.out.print("Ingrese su fecha de nacimiento (dd/MM/yyyy): ");
