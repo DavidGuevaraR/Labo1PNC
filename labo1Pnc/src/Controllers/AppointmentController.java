@@ -101,7 +101,7 @@ public class AppointmentController {
         LocalDateTime date = null;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-        System.out.println("Patient DUI: ");
+        System.out.println("Ingrese DUI del paciente: ");
         String dui = sc.nextLine();
         patient = personService.findPersonByDui(dui);
         if (patient == null) {
@@ -109,39 +109,39 @@ public class AppointmentController {
             return;
         }
 
-        System.out.println("Choose Doctor Speciality:");
+        System.out.println("Escribe la especialidad del doctor:");
         String speciality = sc.nextLine();
         doctorsSpeciality = searchDoctorSpeciality(doctorService.getDoctors(), speciality);
 
         if(doctorsSpeciality.isEmpty()){
-            System.out.println("No doctors found with this speciality");
+            System.out.println("No hay doctores disponibles en esta especialidad");
             return;
         }
 
-        System.out.println("Available Doctors: ");
+        System.out.println("Doctores de la especialidad: ");
         for (Doctor doctor : doctorsSpeciality) {
             System.out.println("Code: " + doctor.getCode() + ", Doctor: " + doctor.getFirstName().charAt(0) + ". " + doctor.getLastName());
         }
 
         Doctor selectedDoctor = null;
         while(selectedDoctor == null){
-            System.out.println("Select Doctor Code: ");
+            System.out.println("Escribe el codigo del doctor deseado: ");
             String doctorCode = sc.nextLine();
 
             selectedDoctor = searchDoctor(doctorsSpeciality, doctorCode);
 
             if(selectedDoctor == null){
-                System.out.println("Doctor not found");
+                System.out.println("Doctor no encontrado");
             }
 
         }
 
-        System.out.println("Appointment Date And Hour: (dd/MM/yyyy HH:mm)");
+        System.out.println("Fecha y hora a inscribir: (dd/MM/yyyy HH:mm)");
         String appointmentDate = sc.nextLine();
         try {
             date = LocalDateTime.parse(appointmentDate, dtf);
         } catch (Exception e) {
-            System.out.println("Invalid Appointment date");
+            System.out.println("Invalida fecha de cita");
         }
 
         boolean assistence = false;
@@ -161,7 +161,7 @@ public class AppointmentController {
         List<Doctor> doctorsSpeciality = null;
         LocalDateTime today = LocalDateTime.now();
 
-        System.out.println("Patient DUI: ");
+        System.out.println("Escribe el DUI del paciente: ");
         String dui = sc.nextLine();
         patient = personService.findPersonByDui(dui);
         if (patient == null) {
@@ -169,29 +169,29 @@ public class AppointmentController {
             return;
         }
 
-        System.out.println("Choose Doctor Speciality:");
+        System.out.println("Escribe la especialidad del doctor:");
         String speciality = sc.nextLine();
         doctorsSpeciality = searchDoctorSpeciality(doctorService.getDoctors(), speciality);
 
         if(doctorsSpeciality.isEmpty()){
-            System.out.println("No doctors found with this speciality");
+            System.out.println("No doctores disponibles en esta especialidad");
             return;
         }
 
-        System.out.println("Available Doctors: ");
+        System.out.println("Doctores disponibles: ");
         for (Doctor doctor : doctorsSpeciality) {
             System.out.println("Code: " + doctor.getCode() + ", Doctor: " + doctor.getFirstName().charAt(0) + ". " + doctor.getLastName());
         }
 
         Doctor selectedDoctor = null;
         while(selectedDoctor == null){
-            System.out.println("Select Doctor Code: ");
+            System.out.println("Escribe el codigo del doctor a elegir: ");
             String doctorCode = sc.nextLine();
 
             selectedDoctor = searchDoctor(doctorsSpeciality, doctorCode);
 
             if(selectedDoctor == null){
-                System.out.println("Doctor not found");
+                System.out.println("Doctor no encontrado");
             }
 
         }

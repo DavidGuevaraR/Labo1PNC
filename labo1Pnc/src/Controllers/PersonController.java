@@ -25,7 +25,7 @@ public class PersonController {
 
         String firstName;
         do {
-            System.out.print("Pacient First Name (solo letras, 2-50 caracteres): ");
+            System.out.print("Ingrese el primer nombre del paciente (solo letras, 2-50 caracteres): ");
             firstName = sc.nextLine().trim();
             if (!isValidName(firstName)) {
                 System.out.println("Nombre inválido. Use solo letras, entre 2 y 50 caracteres.");
@@ -34,7 +34,7 @@ public class PersonController {
 
         String lastName;
         do {
-            System.out.print("Pacient Last Name (solo letras, 2-50 caracteres): ");
+            System.out.print("Ingrese el primer apellido (solo letras, 2-50 caracteres): ");
             lastName = sc.nextLine().trim();
             if (!isValidName(lastName)) {
                 System.out.println("Apellido inválido. Use solo letras, entre 2 y 50 caracteres.");
@@ -44,7 +44,7 @@ public class PersonController {
         // El formato del DUI lo dej asi: 12345678-9)
         String dui;
         do {
-            System.out.print("Pacient DUI (formato: 12345678-9): ");
+            System.out.print("Ingrese su DUI (formato: 12345678-9): ");
             dui = sc.nextLine().trim();
             if (!isValidDui(dui)) {
                 System.out.println("DUI inválido. Use el formato 12345678-9.");
@@ -55,7 +55,7 @@ public class PersonController {
 
         LocalDate dateOfBirth = null;
         while (dateOfBirth == null) {
-            System.out.print("Pacient Birth Date (dd/MM/yyyy): ");
+            System.out.print("Ingrese su fecha de nacimiento (dd/MM/yyyy): ");
             String dobInput = sc.nextLine().trim();
             try {
                 dateOfBirth = LocalDate.parse(dobInput, formatter);
