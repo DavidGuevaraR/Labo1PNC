@@ -22,4 +22,13 @@ public class PersonService {
         }
         return null;
     }
+    public List<Person> findPersonsByDui(String dui) {
+        List<Person> result = new ArrayList<>();
+        for (Person person : persons) {
+            if (person.getDui().equals(dui)) {
+                result.add(person);
+            }
+        }
+        return result;
+    }
 }

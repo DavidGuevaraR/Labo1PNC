@@ -59,6 +59,10 @@ public class AppointmentService {
     public LocalDateTime getAvailableHours(Doctor doctor, LocalDateTime day) {
         LocalDateTime availableHours = null;
 
+        if (day.getHour() > 16) {
+            day = day.plusDays(1);
+        }
+
         for (int hour = 8; hour < 16; hour++) {
             availableHours = LocalDateTime.of(day.getYear(), day.getMonth(), day.getDayOfMonth(), hour, 0);
 

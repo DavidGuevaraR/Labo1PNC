@@ -8,6 +8,7 @@ import Service.PersonService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class AppointmentController {
@@ -115,6 +116,18 @@ public class AppointmentController {
             System.out.println("Paciente no encontrado. Por favor, registre al paciente primero.");
             return;
         }
+        if (patient.getDui().equals("00000000-0")){
+            List<Person> foundPersons = personService.findPersonsByDui("00000000-0");
+            for (int i = 0; i < foundPersons.size(); i++) {
+                Person person = foundPersons.get(i);
+                System.out.println(i + ". " + person.getFirstName() + " " + person.getLastName());
+            }
+            System.out.println("Escribe el numero de la persona que desea agregar a la cita");
+            int personNumber = sc.nextInt();
+            sc.nextLine();
+            patient = personService.findPersonsByDui("00000000-0").get(personNumber);
+            sc.nextLine();
+        }
 
         System.out.println("Escribe la especialidad del doctor:");
         String speciality = sc.nextLine();
@@ -174,6 +187,18 @@ public class AppointmentController {
         if (patient == null) {
             System.out.println("Paciente no encontrado. Por favor, registre al paciente primero.");
             return;
+        }
+        if (patient.getDui().equals("00000000-0")){
+            List<Person> foundPersons = personService.findPersonsByDui("00000000-0");
+            for (int i = 0; i < foundPersons.size(); i++) {
+                Person person = foundPersons.get(i);
+                System.out.println(i + ". " + person.getFirstName() + " " + person.getLastName());
+            }
+            System.out.println("Escribe el numero de la persona que desea agregar a la cita");
+            int personNumber = sc.nextInt();
+            sc.nextLine();
+            patient = personService.findPersonsByDui("00000000-0").get(personNumber);
+            sc.nextLine();
         }
 
         System.out.println("Escribe la especialidad del doctor:");
